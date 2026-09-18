@@ -3,3 +3,13 @@
 
 @media(max-width:700px){body{overscroll-behavior:none}.topbar{padding-top:env(safe-area-inset-top);height:calc(58px + env(safe-area-inset-top))}.section{min-height:auto;padding-top:calc(86px + env(safe-area-inset-top));padding-bottom:calc(110px + env(safe-area-inset-bottom))}.nav{bottom:calc(10px + env(safe-area-inset-bottom))}.mini-timer{bottom:calc(74px + env(safe-area-inset-bottom));right:12px}.section-head{flex:0 0 auto}.flowline{flex:1 1 auto;min-height:0}}
 html,body{width:100%;min-height:100%;-webkit-text-size-adjust:100%;text-size-adjust:100%;overscroll-behavior-y:none;-webkit-overflow-scrolling:touch}button,a,.pill,.box{-webkit-tap-highlight-color:transparent;touch-action:manipulation}@supports(-webkit-touch-callout:none){body{padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}}@media(max-width:1024px){.flowline .pill,.flowline .box{-webkit-user-select:none;user-select:none}}@media(max-width:700px){body{overflow-x:hidden}}.scroll-gauge{position:fixed;right:9px;top:50%;transform:translateY(-50%);width:2px;height:40vh;background:#dededb;border-radius:99px;overflow:hidden;z-index:25}.scroll-gauge:after{content:"";position:absolute;left:0;top:0;width:100%;height:calc(var(--scroll-progress,0)*100%);background:#222;border-radius:99px;transition:height .12s linear}.section:not(.active){opacity:.58}@media(max-width:700px){.section{min-height:100svh;overflow:visible}.flowline{height:auto;overflow:visible;padding-bottom:70px}.scroll-gauge{right:4px;height:34vh}}.section + .section{border-top:1px solid rgba(0,0,0,.055)}#flow{scroll-snap-type:none}.scroll-gauge{height:44vh}.scroll-gauge:after{transition:height .08s linear}@media(max-width:700px){.scroll-gauge{height:32vh}}
+/* Continuous document scroll: no section-sized scrolling */
+html,body{height:auto!important;min-height:100%!important;overflow-x:hidden!important;overflow-y:auto!important;scroll-snap-type:none!important;scroll-snap-align:none!important}
+#flow{height:auto!important;min-height:0!important;overflow:visible!important}
+.section{height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important}
+@media(max-width:700px){
+  html,body{height:auto!important;overflow-y:auto!important;-webkit-overflow-scrolling:touch!important;overscroll-behavior-y:auto!important}
+  #flow{height:auto!important}
+  .section{height:auto!important;min-height:0!important;padding-top:calc(86px + env(safe-area-inset-top));padding-bottom:calc(110px + env(safe-area-inset-bottom))}
+  .flowline{height:auto!important;max-height:none!important;overflow:visible!important;-webkit-overflow-scrolling:auto!important}
+}
