@@ -23,3 +23,9 @@ html,body{height:auto!important;min-height:100%!important;overflow-x:hidden!impo
 /* SECTION ANCHORS: title and first step enter together below the fixed header */
 .section{scroll-margin-top:60px!important}
 @media(max-width:700px){.section{scroll-margin-top:calc(58px + env(safe-area-inset-top))!important;padding-top:18px!important;padding-bottom:24px!important}.section:first-child{padding-top:72px!important}.section-head{margin-bottom:7px!important}.flowline{margin-top:0!important;padding-top:0!important;padding-bottom:12px!important}.flowline>*{margin-top:3px!important;margin-bottom:3px!important}.flowline .box{margin-top:5px!important;margin-bottom:5px!important}}
+
+/* SINGLE SCROLL STREAM: inner steps and next section share the same document scroll */
+.flowline{overflow:visible!important;height:auto!important;max-height:none!important;min-height:0!important;touch-action:auto!important}
+.section{overflow:visible!important;height:auto!important;max-height:none!important;min-height:0!important}
+#flow{overflow:visible!important;height:auto!important;transform:none!important}
+html,body{overflow-x:hidden!important;overflow-y:auto!important;touch-action:pan-y!important;-webkit-overflow-scrolling:touch!important}
