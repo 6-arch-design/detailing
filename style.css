@@ -29,3 +29,11 @@ html,body{height:auto!important;min-height:100%!important;overflow-x:hidden!impo
 .section{overflow:visible!important;height:auto!important;max-height:none!important;min-height:0!important}
 #flow{overflow:visible!important;height:auto!important;transform:none!important}
 html,body{overflow-x:hidden!important;overflow-y:auto!important;touch-action:pan-y!important;-webkit-overflow-scrolling:touch!important}
+
+/* FINAL MOBILE FIX: sections are ordinary document blocks, never scroll containers */
+html,body{height:auto!important;min-height:0!important;overflow:visible!important;overflow-x:hidden!important;overflow-y:auto!important;touch-action:pan-y!important;-webkit-overflow-scrolling:touch!important}
+body{position:relative!important}
+#flow{display:block!important;height:auto!important;min-height:0!important;overflow:visible!important;transform:none!important}
+.section,.section.active{display:block!important;position:relative!important;width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important;opacity:1!important;transform:none!important}
+.flowline{display:flex!important;flex-direction:column!important;align-items:center!important;width:min(680px,92vw)!important;height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important;position:relative!important}
+@media(max-width:700px){.section,.section.active{display:block!important;padding-top:18px!important;padding-bottom:24px!important}.section:first-child{padding-top:72px!important}.section:last-child{padding-bottom:80px!important}.flowline{width:94vw!important;height:auto!important;overflow:visible!important}}
