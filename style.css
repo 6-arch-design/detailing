@@ -74,3 +74,21 @@ body{height:auto!important;min-height:100%!important;overflow-x:hidden!important
 /* CUSTOM PRODUCT PHOTO: don't let the original sprite sit underneath the uploaded image */
 .product .art.product-photo:has(img){background:none!important;background-image:none!important;mix-blend-mode:normal!important}
 .product .art.product-photo:has(img) img{mix-blend-mode:multiply;background:transparent!important}
+
+/* PRODUCT PREPARATION TOGGLE */
+.product{position:relative;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .2s ease,opacity .2s ease}
+.product:focus-visible{outline:2px solid #222;outline-offset:2px;border-radius:6px}
+.product .product-toggle{position:absolute;top:3px;right:2px;min-width:27px;height:17px;padding:2px 5px;border:1px solid #d4d4d1;border-radius:999px;background:#ededeb;color:#999;font-size:7px;font-weight:800;line-height:12px;text-align:center;letter-spacing:.02em}
+.product.is-ready{transform:translateY(-2px)}
+.product.is-ready .product-toggle{background:#222;border-color:#222;color:#fff}
+.product.is-ready .art{opacity:1;filter:none}
+.product:not(.is-ready) .art{opacity:.48;filter:grayscale(.35)}
+.product-prep-status{grid-column:1/-1;justify-self:center;margin:-2px auto 0;padding:3px 8px;border:1px solid #dededb;border-radius:999px;background:rgba(255,255,255,.72);color:#aaa;font-size:7px;line-height:1;font-weight:700;letter-spacing:.02em}
+.product-prep-status.complete{background:#222;border-color:#222;color:#fff}
+.section-prep-status{display:inline-flex;align-items:center;justify-content:center;margin:9px auto 0;padding:4px 9px;border:1px solid #dededb;border-radius:999px;background:rgba(255,255,255,.72);color:#aaa;font-size:8px;line-height:1;font-weight:700;letter-spacing:.02em}
+.section-prep-status.complete{background:#222;border-color:#222;color:#fff}
+@media(max-width:700px){
+  .product .product-toggle{top:1px;right:0;min-width:24px;height:15px;padding:1px 4px;font-size:6px;line-height:12px}
+  .product-prep-status{font-size:6px;padding:3px 7px}
+  .section-prep-status{margin-top:7px;font-size:7px}
+}
