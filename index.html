@@ -8,6 +8,11 @@
 <meta name="theme-color" content="#f8f8f6" />
 <title>디테일링 순서</title>
 <link rel="stylesheet" href="style.css" />
+<link rel="manifest" href="manifest.json" />
+<link rel="icon" href="icon.svg" type="image/svg+xml" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-title" content="디테일링" />
+<link rel="apple-touch-icon" href="icon.svg" />
 <style>
 .start-screen{position:fixed;inset:0;z-index:100;background:#f8f8f6;display:flex;align-items:center;justify-content:center;text-align:center;transition:opacity .45s ease,visibility .45s ease}
 .start-screen.hide{opacity:0;visibility:hidden;pointer-events:none}
@@ -91,5 +96,10 @@ document.getElementById('letsGo').addEventListener('click',function(){
 });
 </script>
 <script src="app.js"></script>
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js"));
+}
+</script>
 </body>
 </html>
