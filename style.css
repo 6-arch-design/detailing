@@ -121,3 +121,18 @@ body{height:auto!important;min-height:100%!important;overflow-x:hidden!important
   background-image:none!important;
   mix-blend-mode:multiply!important;
 }
+
+/* FIX: ON state transform was creating a stacking context, so multiply could no longer blend away the JPEG white field. */
+.box.one .product:has(.product-photo img).is-ready{
+  transform:none!important;
+  isolation:auto!important;
+  mix-blend-mode:normal!important;
+}
+.box.one .product:has(.product-photo img).is-ready .art.product-photo{
+  transform:none!important;
+  mix-blend-mode:multiply!important;
+  isolation:auto!important;
+}
+.box.one .product:has(.product-photo img).is-ready .art.product-photo img{
+  mix-blend-mode:multiply!important;
+}
