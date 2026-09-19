@@ -24,7 +24,7 @@
 .lets-go span{margin-left:12px;font-size:18px}
 .lets-go:active{transform:scale(.98)}
 body.app-locked{overflow:hidden}
-</style></head>
+</style><meta name="app-version" content="4"><meta http-equiv="Cache-Control" content="no-cache"></head>
 <body>
 <div id="startScreen" class="start-screen">
   <div class="start-inner">
@@ -96,7 +96,7 @@ document.getElementById('letsGo').addEventListener('click',function(){
   setTimeout(function(){document.getElementById('startScreen').remove()},500);
 });
 </script>
-<script src="app.js"></script>
+<script src="app.js?v=4"></script>
 <script>
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js"));
