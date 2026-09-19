@@ -50,3 +50,9 @@ body{height:auto!important;min-height:100%!important;overflow-x:hidden!important
 .product .art.product-photo{width:58px!important;height:58px!important;display:block!important;background:#fff url('assets/product-sprite.jpg') 0 0/800% 400% no-repeat!important;background-position:calc(var(--photo-x)*14.285714%) calc(var(--photo-y)*33.333333%)!important;border-radius:2px!important;overflow:hidden!important}
 .product .art.product-photo img{width:100%!important;height:100%!important;object-fit:contain!important;display:block!important}
 @media(max-width:700px){.product .art.product-photo{width:48px!important;height:48px!important}}
+
+/* TOP TOTAL TIMER */
+.top-progress.total-time{display:flex;align-items:baseline;gap:9px;color:#999;font-size:10px;letter-spacing:.04em;font-weight:700}
+.top-progress.total-time strong{font-size:20px;line-height:1;color:#222;font-variant-numeric:tabular-nums;letter-spacing:.02em}
+.mini-timer{display:none!important}
+@media(max-width:700px){.top-progress.total-time{gap:7px}.top-progress.total-time strong{font-size:18px}.top-progress.total-time span{font-size:9px}}
