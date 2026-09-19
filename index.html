@@ -24,6 +24,46 @@
 .lets-go span{margin-left:12px;font-size:18px}
 .lets-go:active{transform:scale(.98)}
 body.app-locked{overflow:hidden}
+
+/* Purple Rain: remove the white square when active while keeping the product and a soft cast shadow */
+.product .art.product-photo:has(img){
+  position:relative!important;
+  width:84px!important;
+  height:84px!important;
+  background:none!important;
+  background-image:none!important;
+  overflow:visible!important;
+  isolation:isolate!important;
+}
+.product .art.product-photo:has(img)::after{
+  content:"";
+  position:absolute;
+  z-index:0;
+  right:-2px;
+  bottom:8px;
+  width:66%;
+  height:24%;
+  border-radius:50%;
+  background:radial-gradient(ellipse at center,rgba(0,0,0,.17) 0%,rgba(0,0,0,.09) 42%,rgba(0,0,0,0) 76%);
+  transform:rotate(18deg);
+  filter:blur(4px);
+  pointer-events:none;
+}
+.product .art.product-photo:has(img) img{
+  position:relative!important;
+  z-index:1;
+  width:100%!important;
+  height:100%!important;
+  object-fit:contain!important;
+  display:block!important;
+  background:transparent!important;
+  mix-blend-mode:normal!important;
+  clip-path:polygon(33% 12%,51.5% 12%,55% 15.5%,66.5% 19%,71.5% 24.5%,74.5% 34%,74% 46.5%,73% 61.5%,74% 71.5%,71% 78.5%,64.5% 82%,54% 83.5%,44.5% 82%,35% 78.5%,29.5% 73%,27% 66%,26% 54%,26% 41%,27.5% 31%,30% 24%);
+  filter:drop-shadow(0 4px 4px rgba(0,0,0,.10));
+}
+@media(max-width:700px){
+  .product .art.product-photo:has(img){width:82px!important;height:82px!important}
+}
 </style></head>
 <body>
 <div id="startScreen" class="start-screen">
@@ -96,7 +136,7 @@ document.getElementById('letsGo').addEventListener('click',function(){
   setTimeout(function(){document.getElementById('startScreen').remove()},500);
 });
 </script>
-<script src="app.js?v=18"></script>
+<script src="app.js?v=19"></script>
 <script>
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js"));
