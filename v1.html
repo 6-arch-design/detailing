@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="theme-color" content="#f8f8f6" />
+<title>디테일링 순서</title>
+<link rel="stylesheet" href="style.css" />
+<style>
+.start-screen{position:fixed;inset:0;z-index:100;background:#f8f8f6;display:flex;align-items:center;justify-content:center;text-align:center;transition:opacity .45s ease,visibility .45s ease}
+.start-screen.hide{opacity:0;visibility:hidden;pointer-events:none}
+.start-inner{width:min(88vw,520px);display:flex;flex-direction:column;align-items:center}
+.start-kicker{font-size:10px;letter-spacing:.28em;color:#999;font-weight:800;margin-bottom:22px}
+.start-title{font-size:clamp(42px,11vw,78px);line-height:.88;letter-spacing:-.075em;font-weight:900;color:#1f1f1f}
+.start-title span{color:#d0d0cd;-webkit-text-stroke:1px #aaa}
+.lets-go{margin-top:58px;width:min(360px,78vw);height:58px;border:0;border-radius:999px;background:#222;color:#fff;font-size:13px;font-weight:900;letter-spacing:.08em;box-shadow:0 12px 30px rgba(0,0,0,.12);cursor:pointer;touch-action:manipulation}
+.lets-go span{margin-left:12px;font-size:18px}
+.lets-go:active{transform:scale(.98)}
+body.app-locked{overflow:hidden}
+</style></head>
+<body>
+<div id="startScreen" class="start-screen">
+  <div class="start-inner">
+    <div class="start-kicker">PREMIUM DETAILING</div>
+    <div class="start-title">DETAILING<br><span>PROCESS</span></div>
+    <button id="letsGo" class="lets-go" type="button">LET'S GO <span>→</span></button>
+  </div>
+</div>
+<header class="topbar"><div class="brand"><span class="brand-mark">AD</span><span>디테일링 순서</span></div><div class="top-progress"><span id="progressNum">01</span><span class="slash">/</span><span>08</span></div></header>
+<main id="flow">
+<section class="section active" data-title="휠 · 타이어">
+  <div class="section-head"><div class="eyebrow">001</div><h1>휠 · 타이어 <em>STEP</em></h1><p>오염된 휠과 타이어부터 순서대로</p></div>
+  <div class="flowline">
+    <span class="pill dark">오염된 휠</span><span class="pill">휠 클리닝</span>
+    <div class="box one"><Product data-icon="spray" data-title="철분 제거제" data-sub="PURPLE RAIN" data-note="원액 사용" data-image="assets/purple-rain.jpg"></Product></div>
+    <span class="pill">드웰 타임</span><small class="hint">* 철분 반응 2분 후 제거</small>
+    <span class="pill dark">오염된 타이어</span><span class="pill">타이어 세정</span>
+    <div class="box two"><Product data-icon="spray" data-title="휠 클리너" data-sub="베리 체리 다이렉트" data-note="타이어 갈변 제거"></Product><Product data-icon="brush" data-title="타이어 디테일링" data-sub="브러쉬" data-note="타이어 전용 · 휠 사용 금지"></Product></div>
+    <div class="box four"><Product data-icon="bottle" data-title="휠 클리너" data-sub="베리 체리 다이렉트" data-note="휠 세정 · 1:1 희석"></Product><Product data-icon="sprayer" data-title="압축 분무기" data-sub="IK 폼프로 2" data-note="원액 500mL, 물 500mL"></Product><Product data-icon="brush" data-title="휠 브러쉬" data-sub="DBS" data-note="스포크 & 림"></Product><Product data-icon="brush2" data-title="휠 브러쉬" data-sub="DBS" data-note="휠 하우스 세정"></Product></div>
+    <span class="pill">고압수</span><span class="pill">악세서리</span>
+    <div class="box two"><Product data-icon="spraydark" data-title="멀티 트리거" data-sub="IK" data-note="철분제거제 전용"></Product><Product data-icon="tool" data-title="닐피스크" data-sub="AD" data-note="휠 클리너 전용"></Product></div>
+  </div>
+</section>
+<section class="section" data-title="프리워시">
+  <div class="section-head"><div class="eyebrow">002</div><h1>프리워시 <em>STEP</em></h1><p>오염된 자동차의 외부 오염을 먼저 불립니다</p></div>
+  <div class="flowline"><span class="pill dark">오염된 자동차</span><span class="pill">프리워시</span>
+  <div class="box two"><Product data-icon="bottle" data-title="프리워시" data-sub="시트러스 워시" data-note="벌레사체, 기름때 제거"></Product><Product data-icon="spray" data-title="전동 분무기" data-sub="AD" data-note="원액 30mL, 물 1500mL"></Product></div>
+  <span class="pill">드웰 타임</span><small class="hint">* 때 불리기 3분 후 제거</small><span class="pill">고압수</span><span class="pill">악세서리</span>
+  <div class="box two"><Product data-icon="nozzle" data-title="50° 분사 노즐" data-sub="카톤" data-note="준준형 차 전용"></Product><Product data-icon="nozzle2" data-title="80° 분사 노즐" data-sub="카톤" data-note="SUV 및 대형 차 전용"></Product></div></div>
+</section>
+<section class="section" data-title="유막제거">
+  <div class="section-head"><div class="eyebrow">003</div><h1>유막제거 <em>STEP</em></h1><p>오염된 유리를 깨끗하게 정리합니다</p></div>
+  <div class="flowline"><span class="pill dark">오염된 유리</span><span class="pill">유막 제거</span><div class="box one"><Product data-icon="glass" data-title="유막 제거제" data-sub="글리코" data-note="유막 제거"></Product></div><span class="pill">고압수</span></div>
+</section>
+<section class="section" data-title="스노우폼 · 카샴푸">
+  <div class="section-head"><div class="eyebrow">004</div><h1>스노우폼 · 카샴푸 <em>STEP</em></h1><p>유막 제거 후 본세차</p></div>
+  <div class="flowline"><span class="pill dark">유막 제거 후</span><span class="pill">스노우폼</span><div class="box three"><Product data-icon="bottle" data-title="스노우폼" data-sub="슈퍼폼" data-note="1:10 희석"></Product><Product data-icon="foam" data-title="스노우 폼랜스" data-sub="신형" data-note="원액 50mL, 물 500mL"></Product><Product data-icon="brush" data-title="익스테리어 브러쉬" data-sub="SSB" data-note="그릴 밑 틈새 세정"></Product></div>
+  <span class="pill dark">본세차</span><span class="pill">카샴푸</span><div class="box three"><Product data-icon="bottle2" data-title="카샴푸" data-sub="바나나 글로스" data-note="1:400 희석"></Product><Product data-icon="bucket" data-title="투명 버킷" data-sub="4L" data-note="원액 25mL, 물 10L"></Product><Product data-icon="mitt" data-title="워시미트" data-sub="BDL" data-note="상단에서 하부순서"></Product></div>
+  <span class="pill">고압수</span><span class="pill">드라잉</span><span class="pill">악세서리</span><div class="box one"><Product data-icon="cup" data-title="샴푸 계량컵" data-sub="딜루션 지거" data-note="카샴푸 계량용"></Product></div></div>
+</section>
+<section class="section" data-title="코팅">
+  <div class="section-head"><div class="eyebrow">005</div><h1>코팅 <em>STEP</em></h1><p>깨끗한 유리와 도장을 각각 코팅합니다</p></div>
+  <div class="flowline"><span class="pill dark">깨끗한 유리</span><span class="pill">발수 코팅</span><div class="box three"><Product data-icon="spray" data-title="발수 코팅제" data-sub="레펠" data-note="원액 사용"></Product><Product data-icon="block" data-title="어플리케이터" data-sub="코팅블럭" data-note="원액 3방울"></Product><Product data-icon="towel" data-title="유리용 타월" data-sub="마린글래스" data-note="남은 약제 제거"></Product></div><span class="pill">버핑 / 경화</span><small class="hint">* 10분 후 제거</small>
+  <span class="pill dark">깨끗한 도장</span><span class="pill">도장 코팅</span><div class="box two"><Product data-icon="spray" data-title="퀵샤인" data-sub="QD 다이렉트" data-note="원액 사용"></Product><Product data-icon="block" data-title="버핑타월" data-sub="엣지프로" data-note="원액 3회 분사"></Product></div><span class="pill">버핑 / 경화</span><small class="hint">* 마른 타월로 1차 버핑<br/>* 깨끗한 면으로 2차 버핑</small></div>
+</section>
+<section class="section" data-title="타이어 드레싱">
+  <div class="section-head"><div class="eyebrow">006</div><h1>타이어 드레싱 <em>STEP</em></h1><p>깨끗한 타이어에 광택을 더합니다</p></div>
+  <div class="flowline"><span class="pill dark">깨끗한 타이어</span><span class="pill">타이어 광택</span><div class="box two"><Product data-icon="spraygold" data-title="타이어 광택제" data-sub="바나나 브리즈" data-note="타이어 광택 전용 · 원액 사용"></Product><Product data-icon="block" data-title="어플리케이터" data-sub="타이어" data-note="적정량 도포"></Product></div><span class="pill">드라잉</span></div>
+</section>
+<section class="section" data-title="매트">
+  <div class="section-head"><div class="eyebrow">007</div><h1>매트 <em>STEP</em></h1><p>오염된 매트를 세정하고 마무리합니다</p></div>
+  <div class="flowline"><span class="pill dark">오염된 매트</span><span class="pill">진공청소</span><span class="pill">고압수</span><span class="pill">매트 세정</span><div class="box two"><Product data-icon="spray" data-title="카펫 세정제" data-sub="매직 카펫" data-note="원액 사용"></Product><Product data-icon="brush" data-title="브러쉬" data-sub="매트" data-note="매트 세척용"></Product></div><span class="pill">고압수</span><span class="pill">드라잉</span></div>
+</section>
+<section class="section" data-title="실내">
+  <div class="section-head"><div class="eyebrow">008</div><h1>실내 <em>STEP</em></h1><p>오염된 실내를 세정하고 타월로 마무리합니다</p></div>
+  <div class="flowline"><span class="pill dark">오염된 실내</span><span class="pill">진공청소</span><span class="pill">실내 세정</span><div class="box three"><Product data-icon="sprayblue" data-title="실내 클리너" data-sub="FAB 다이렉트" data-note="원액 사용"></Product><Product data-icon="brush" data-title="인테리어 브러쉬" data-sub="DBS" data-note="실내 세정"></Product><Product data-icon="towel" data-title="버핑타월" data-sub="엣지프로" data-note="타월로 마무리"></Product></div><span class="pill">드라잉</span><span class="pill">악세서리</span><div class="box one"><Product data-icon="bottle" data-title="거품용 희석용기" data-sub="딜루션 보틀" data-note="실내클리너 전용"></Product></div></div>
+  <div class="finish">DETAILING COMPLETE <span>✓</span></div>
+</section>
+</main>
+<div class="side-index" id="sideIndex"></div>
+<div class="mini-timer" id="miniTimer"><span class="dot"></span><span class="label">진행</span><strong id="timerValue">00:00</strong></div>
+<div class="nav"><button id="prev">←</button><div><span id="navTitle">휠 · 타이어</span><b id="navCount">01 / 08</b></div><button id="next">→</button></div>
+<script>
+document.body.classList.add('app-locked');
+document.getElementById('letsGo').addEventListener('click',function(){
+  document.getElementById('startScreen').classList.add('hide');
+  document.body.classList.remove('app-locked');
+  setTimeout(function(){document.getElementById('startScreen').remove()},500);
+});
+</script>
+<script src="app.js"></script>
+</body>
+</html>
