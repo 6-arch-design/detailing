@@ -69,3 +69,8 @@ body{height:auto!important;min-height:100%!important;overflow-x:hidden!important
 .stage-inline-timer .stage-timer-label{color:#888;font-weight:700;}
 .stage-inline-timer .stage-timer-dot{font-size:7px;color:#222;}
 .stage-inline-timer strong{display:inline-block!important;color:#222!important;font-size:11px!important;font-weight:800!important;visibility:visible!important;opacity:1!important;min-width:34px;text-align:center;}
+
+
+/* PRODUCT PHOTO: visually remove white background while preserving the original shadow */
+.product .art.product-photo:has(img){mix-blend-mode:multiply;background-color:transparent!important}
+.product .art.product-photo:has(img) img{mix-blend-mode:multiply;background:transparent!important}
