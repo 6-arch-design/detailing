@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+<rect width="512" height="512" rx="112" fill="#222"/>
+<rect x="44" y="44" width="424" height="424" rx="86" fill="#f8f8f6"/>
+<text x="256" y="238" text-anchor="middle" font-family="Arial,sans-serif" font-size="92" font-weight="900" fill="#222">AD</text>
+<text x="256" y="315" text-anchor="middle" font-family="Arial,sans-serif" font-size="36" font-weight="800" letter-spacing="5" fill="#777">DETAILING</text>
+</svg>
