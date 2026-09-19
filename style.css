@@ -113,3 +113,10 @@ body{height:auto!important;min-height:100%!important;overflow-x:hidden!important
     transform:translate(-50%,-50%)!important;
   }
 }
+
+/* Independent stage timer: visible only after a stage is selected */
+.mini-timer{pointer-events:none!important}
+.mini-timer.show{display:flex!important;opacity:1!important;visibility:visible!important;z-index:99999!important;position:fixed!important;left:50%!important;bottom:28px!important;right:auto!important;top:auto!important;transform:translateX(-50%)!important;align-items:center!important;gap:8px!important;padding:7px 12px!important;border:1px solid #d8d8d5!important;border-radius:999px!important;background:rgba(255,255,255,.96)!important;box-shadow:0 8px 24px rgba(0,0,0,.10)!important}
+.mini-timer.show .dot{width:6px!important;height:6px!important;min-width:6px!important}
+.mini-timer.show .label{font-size:9px!important;color:#999!important}
+.mini-timer.show strong{font-size:13px!important;color:#222!important;font-variant-numeric:tabular-nums!important}
