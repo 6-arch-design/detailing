@@ -108,3 +108,16 @@ body{height:auto!important;min-height:100%!important;overflow-x:hidden!important
   filter:none!important;
   opacity:1!important;
 }
+
+/* FINAL: blend the whole custom product card so the source white field cannot reappear on ON */
+.box.one .product:has(.product-photo img){
+  isolation:auto!important;
+  mix-blend-mode:multiply!important;
+}
+.box.one .product:has(.product-photo img) .art,
+.box.one .product:has(.product-photo img) .art.product-photo,
+.box.one .product:has(.product-photo img) .art.product-photo img{
+  background:transparent!important;
+  background-image:none!important;
+  mix-blend-mode:multiply!important;
+}
