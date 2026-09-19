@@ -93,3 +93,18 @@ body{height:auto!important;min-height:100%!important;overflow-x:hidden!important
   .product-prep-status{font-size:6px;padding:3px 7px}
   .section-prep-status{margin-top:7px;font-size:7px}
 }
+/* KEEP THE PRODUCT CUTOUT EFFECT WHEN ACTIVATED */
+.product.is-ready .art.product-photo:has(img){
+  background:transparent!important;
+  background-image:none!important;
+  mix-blend-mode:multiply!important;
+  isolation:auto!important;
+  filter:grayscale(0.0001)!important;
+  opacity:1!important;
+}
+.product.is-ready .art.product-photo:has(img) img{
+  background:transparent!important;
+  mix-blend-mode:multiply!important;
+  filter:none!important;
+  opacity:1!important;
+}
