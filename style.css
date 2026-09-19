@@ -63,3 +63,9 @@ body{height:auto!important;min-height:100%!important;overflow-x:hidden!important
 .stage-inline-timer strong{font-size:10px;font-variant-numeric:tabular-nums;letter-spacing:.02em;color:#444}
 .is-current .stage-inline-timer{opacity:1}
 @media(max-width:700px){.stage-inline-timer{margin-left:5px;padding:3px 6px;font-size:9px}.stage-inline-timer strong{font-size:9px}}
+
+/* Visible timer directly under the active progress item */
+.stage-inline-timer{display:flex!important;align-items:center;justify-content:center;gap:6px;width:max-content;min-height:24px;margin:-2px 0 8px;padding:4px 9px;border:1px solid #d8d8d5;border-radius:999px;background:#fff!important;color:#555!important;position:relative;z-index:10;font-size:9px;line-height:1;box-shadow:0 3px 12px rgba(0,0,0,.06);font-variant-numeric:tabular-nums;}
+.stage-inline-timer .stage-timer-label{color:#888;font-weight:700;}
+.stage-inline-timer .stage-timer-dot{font-size:7px;color:#222;}
+.stage-inline-timer strong{display:inline-block!important;color:#222!important;font-size:11px!important;font-weight:800!important;visibility:visible!important;opacity:1!important;min-width:34px;text-align:center;}
