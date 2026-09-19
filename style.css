@@ -45,3 +45,8 @@ body{height:auto!important;min-height:100%!important;overflow-x:hidden!important
 #flow{height:auto!important;min-height:0!important;overflow:visible!important;transform:none!important;touch-action:pan-y!important}
 .section,.section.active,.flowline{height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important;touch-action:pan-y!important}
 }
+
+/* ORIGINAL PDF PRODUCT PHOTOS */
+.product .art.product-photo{width:58px!important;height:58px!important;display:block!important;background:#fff url('assets/product-sprite.jpg') 0 0/800% 400% no-repeat!important;background-position:calc(var(--photo-x)*14.285714%) calc(var(--photo-y)*33.333333%)!important;border-radius:2px!important;overflow:hidden!important}
+.product .art.product-photo img{width:100%!important;height:100%!important;object-fit:contain!important;display:block!important}
+@media(max-width:700px){.product .art.product-photo{width:48px!important;height:48px!important}}
