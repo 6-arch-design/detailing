@@ -8,8 +8,26 @@
 <meta name="theme-color" content="#f8f8f6" />
 <title>디테일링 순서</title>
 <link rel="stylesheet" href="style.css" />
-</head>
+<style>
+.start-screen{position:fixed;inset:0;z-index:100;background:#f8f8f6;display:flex;align-items:center;justify-content:center;text-align:center;transition:opacity .45s ease,visibility .45s ease}
+.start-screen.hide{opacity:0;visibility:hidden;pointer-events:none}
+.start-inner{width:min(88vw,520px);display:flex;flex-direction:column;align-items:center}
+.start-kicker{font-size:10px;letter-spacing:.28em;color:#999;font-weight:800;margin-bottom:22px}
+.start-title{font-size:clamp(42px,11vw,78px);line-height:.88;letter-spacing:-.075em;font-weight:900;color:#1f1f1f}
+.start-title span{color:#d0d0cd;-webkit-text-stroke:1px #aaa}
+.lets-go{margin-top:58px;width:min(360px,78vw);height:58px;border:0;border-radius:999px;background:#222;color:#fff;font-size:13px;font-weight:900;letter-spacing:.08em;box-shadow:0 12px 30px rgba(0,0,0,.12);cursor:pointer;touch-action:manipulation}
+.lets-go span{margin-left:12px;font-size:18px}
+.lets-go:active{transform:scale(.98)}
+body.app-locked{overflow:hidden}
+</style></head>
 <body>
+<div id="startScreen" class="start-screen">
+  <div class="start-inner">
+    <div class="start-kicker">PREMIUM DETAILING</div>
+    <div class="start-title">DETAILING<br><span>PROCESS</span></div>
+    <button id="letsGo" class="lets-go" type="button">LET'S GO <span>→</span></button>
+  </div>
+</div>
 <header class="topbar"><div class="brand"><span class="brand-mark">AD</span><span>디테일링 순서</span></div><div class="top-progress"><span id="progressNum">01</span><span class="slash">/</span><span>08</span></div></header>
 <main id="flow">
 <section class="section active" data-title="휠 · 타이어">
@@ -64,6 +82,14 @@
 <div class="side-index" id="sideIndex"></div>
 <div class="mini-timer" id="miniTimer"><span class="dot"></span><span class="label">진행</span><strong id="timerValue">00:00</strong></div>
 <div class="nav"><button id="prev">←</button><div><span id="navTitle">휠 · 타이어</span><b id="navCount">01 / 08</b></div><button id="next">→</button></div>
+<script>
+document.body.classList.add('app-locked');
+document.getElementById('letsGo').addEventListener('click',function(){
+  document.getElementById('startScreen').classList.add('hide');
+  document.body.classList.remove('app-locked');
+  setTimeout(function(){document.getElementById('startScreen').remove()},500);
+});
+</script>
 <script src="app.js"></script>
 </body>
 </html>
