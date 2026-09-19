@@ -71,6 +71,6 @@ body{height:auto!important;min-height:100%!important;overflow-x:hidden!important
 .stage-inline-timer strong{display:inline-block!important;color:#222!important;font-size:11px!important;font-weight:800!important;visibility:visible!important;opacity:1!important;min-width:34px;text-align:center;}
 
 
-/* PRODUCT PHOTO: visually remove white background while preserving the original shadow */
-.product .art.product-photo:has(img){mix-blend-mode:multiply;background-color:transparent!important}
+/* CUSTOM PRODUCT PHOTO: don't let the original sprite sit underneath the uploaded image */
+.product .art.product-photo:has(img){background:none!important;background-image:none!important;mix-blend-mode:normal!important}
 .product .art.product-photo:has(img) img{mix-blend-mode:multiply;background:transparent!important}
