@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1254" height="1254" viewBox="0 0 1254 1254">
+  <defs>
+    <clipPath id="product">
+      <polygon points="377,146 423,137 478,143 507,164 510,188 556,193 610,211 678,217 755,240 824,277 866,319 899,373 918,445 926,526 925,624 922,724 918,807 907,883 891,939 860,981 817,1009 762,1026 700,1030 637,1022 578,1009 517,992 462,974 418,954 379,927 350,893 333,854 324,808 318,749 311,683 307,610 306,540 306,468 307,409 315,358 328,315 343,276 361,237 374,202"/>
+    </clipPath>
+    <filter id="shadow" x="-30%" y="-30%" width="180%" height="180%">
+      <feDropShadow dx="10" dy="14" stdDeviation="10" flood-color="#000" flood-opacity=".20"/>
+    </filter>
+  </defs>
+  <g clip-path="url(#product)" filter="url(#shadow)">
+    <image href="purple-rain.jpg" x="0" y="0" width="1254" height="1254" preserveAspectRatio="none"/>
+  </g>
+</svg>
