@@ -33,7 +33,7 @@ body.app-locked{overflow:hidden}
     <button id="letsGo" class="lets-go" type="button">LET'S GO <span>→</span></button>
   </div>
 </div>
-<header class="topbar"><div class="brand"><span class="brand-mark">AD</span><span>디테일링 순서</span></div><div class="top-progress total-time"><span>전체 시간</span><strong id="topTimer">00:00</strong></div></header>
+<header class="topbar"><div class="brand"><span class="brand-mark">AD</span><span>디테일링 순서</span></div><div class="top-progress total-time" style="display:none!important"><span>전체 시간</span><strong id="topTimer">00:00</strong></div></header>
 <main id="flow">
 <section class="section active" data-title="휠 · 타이어">
   <div class="section-head"><div class="eyebrow">001</div><h1>휠 · 타이어 <em>STEP</em></h1><p>오염된 휠과 타이어부터 순서대로</p></div>
@@ -96,7 +96,7 @@ document.getElementById('letsGo').addEventListener('click',function(){
   setTimeout(function(){document.getElementById('startScreen').remove()},500);
 });
 </script>
-<script src="app.js?v=10"></script>
+<script src="app.js?v=11"></script>
 <script>
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js"));
