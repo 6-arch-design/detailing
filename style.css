@@ -56,3 +56,10 @@ body{height:auto!important;min-height:100%!important;overflow-x:hidden!important
 .top-progress.total-time strong{font-size:20px;line-height:1;color:#222;font-variant-numeric:tabular-nums;letter-spacing:.02em}
 .mini-timer{display:flex!important}
 @media(max-width:700px){.top-progress.total-time{gap:7px}.top-progress.total-time strong{font-size:18px}.top-progress.total-time span{font-size:9px}}
+
+/* Current-stage timer lives inside the active stage box */
+.stage-inline-timer{display:inline-flex;align-items:center;gap:5px;margin-left:8px;padding:3px 7px;border-radius:999px;background:rgba(255,255,255,.72);font-size:10px;line-height:1;color:#777;vertical-align:middle;white-space:nowrap}
+.stage-inline-timer .dot{width:5px;height:5px;border-radius:50%;background:#222;display:inline-block}
+.stage-inline-timer strong{font-size:10px;font-variant-numeric:tabular-nums;letter-spacing:.02em;color:#444}
+.is-current .stage-inline-timer{opacity:1}
+@media(max-width:700px){.stage-inline-timer{margin-left:5px;padding:3px 6px;font-size:9px}.stage-inline-timer strong{font-size:9px}}
