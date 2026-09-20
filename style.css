@@ -315,3 +315,36 @@ body{height:auto!important;min-height:100%!important;overflow-x:hidden!important
   .flowline .box.is-current:after{z-index:120!important}
   .stage-inline-timer{z-index:90!important}
 }
+
+
+/* PURPLE RAIN CARD: keep the glass visible instead of reading as a white panel */
+.box.one{
+  background:
+    linear-gradient(135deg,rgba(225,226,222,.16) 0%,rgba(245,245,241,.07) 48%,rgba(255,255,252,.15) 100%)!important;
+  border-color:rgba(255,255,255,.58)!important;
+  box-shadow:
+    0 16px 38px rgba(35,35,35,.065),
+    inset 0 1px 0 rgba(255,255,255,.72),
+    inset 0 -1px 0 rgba(140,140,135,.09)!important;
+  -webkit-backdrop-filter:blur(24px) saturate(116%) contrast(103%)!important;
+  backdrop-filter:blur(24px) saturate(116%) contrast(103%)!important;
+}
+.box.one:before{
+  background:linear-gradient(118deg,rgba(255,255,255,.25) 0%,rgba(255,255,255,.045) 32%,rgba(255,255,255,0) 58%,rgba(255,255,255,.10) 100%)!important;
+}
+.box.one .product .art.product-photo:has(img){
+  background:transparent!important;
+  mix-blend-mode:normal!important;
+}
+.box.one .product .art.product-photo:has(img) img{
+  background:transparent!important;
+  mix-blend-mode:multiply!important;
+}
+@media(max-width:700px){
+  .box.one{
+    background:
+      linear-gradient(135deg,rgba(225,226,222,.14) 0%,rgba(245,245,241,.055) 50%,rgba(255,255,252,.13) 100%)!important;
+    -webkit-backdrop-filter:blur(22px) saturate(114%) contrast(103%)!important;
+    backdrop-filter:blur(22px) saturate(114%) contrast(103%)!important;
+  }
+}
