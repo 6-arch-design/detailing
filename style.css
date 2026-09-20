@@ -365,3 +365,10 @@ body{height:auto!important;min-height:100%!important;overflow-x:hidden!important
 }
 .box.one .product .art.product-photo:has(img){overflow:visible!important}
 .box.one .product .art.product-photo:has(img) img{object-fit:contain!important;opacity:1!important}
+
+
+/* PURPLE RAIN: restore visible cutout rendering without card-sized background */
+.box.one .product .art.product-photo:has(img){background:transparent!important;background-image:none!important;mix-blend-mode:normal!important;overflow:visible!important}
+.box.one .product .art.product-photo:has(img) img{mix-blend-mode:multiply!important;background:transparent!important;filter:none!important;opacity:1!important}
+.box.one .product:has(.product-photo img){background:transparent!important}
+.box.one .product:has(.product-photo img).is-ready{background:transparent!important;mix-blend-mode:normal!important;transform:none!important}
