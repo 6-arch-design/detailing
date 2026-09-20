@@ -432,14 +432,14 @@ body{height:auto!important;min-height:100%!important;overflow-x:hidden!important
     height:116px!important;
   }
 }
-/* Very Cherry uses a tighter viewBox so its actual bottle/shadow occupies the same visual area as Purple Rain. */
+/* Very Cherry: smaller visual footprint than the source canvas, with full shadow preserved */
 .box.two .product .art.product-photo:has(img){
-  width:120px!important;
-  height:120px!important;
+  width:96px!important;
+  height:96px!important;
 }
 @media(max-width:700px){
   .box.two .product .art.product-photo:has(img){
-    width:116px!important;
-    height:116px!important;
+    width:92px!important;
+    height:92px!important;
   }
 }
