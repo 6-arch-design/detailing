@@ -136,3 +136,21 @@ body{height:auto!important;min-height:100%!important;overflow-x:hidden!important
 .box.one .product:has(.product-photo img).is-ready .art.product-photo img{
   mix-blend-mode:multiply!important;
 }
+
+/* GLASS MORPHISM PRODUCT BOXES — subtle, like the supplied reference */
+.box{
+  background:rgba(255,255,255,.42)!important;
+  border:1px solid rgba(255,255,255,.72)!important;
+  border-radius:18px!important;
+  box-shadow:0 10px 30px rgba(30,30,30,.055),inset 0 1px 0 rgba(255,255,255,.62)!important;
+  -webkit-backdrop-filter:blur(14px) saturate(115%)!important;
+  backdrop-filter:blur(14px) saturate(115%)!important;
+}
+.box.is-current{
+  background:rgba(255,255,255,.58)!important;
+  border-color:rgba(255,255,255,.9)!important;
+  box-shadow:0 18px 42px rgba(30,30,30,.09),inset 0 1px 0 rgba(255,255,255,.78)!important;
+}
+@media(max-width:700px){
+  .box{border-radius:16px!important;background:rgba(255,255,255,.44)!important;-webkit-backdrop-filter:blur(12px) saturate(112%)!important;backdrop-filter:blur(12px) saturate(112%)!important}
+}
