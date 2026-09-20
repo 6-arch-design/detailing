@@ -348,3 +348,20 @@ body{height:auto!important;min-height:100%!important;overflow-x:hidden!important
     backdrop-filter:blur(22px) saturate(114%) contrast(103%)!important;
   }
 }
+
+
+/* FINAL PURPLE RAIN CUTOUT: restore the previously working transparent asset */
+.box.one .product .art.product-photo:has(img),
+.box.one .product .art.product-photo:has(img) img,
+.box.one .product:has(.product-photo img),
+.box.one .product:has(.product-photo img).is-ready,
+.box.one .product:has(.product-photo img).is-ready .art.product-photo,
+.box.one .product:has(.product-photo img).is-ready .art.product-photo img{
+  background:transparent!important;
+  background-image:none!important;
+  mix-blend-mode:normal!important;
+  isolation:auto!important;
+  filter:none!important;
+}
+.box.one .product .art.product-photo:has(img){overflow:visible!important}
+.box.one .product .art.product-photo:has(img) img{object-fit:contain!important;opacity:1!important}
