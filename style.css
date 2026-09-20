@@ -404,3 +404,42 @@ body{height:auto!important;min-height:100%!important;overflow-x:hidden!important
 }
 .product:has(.product-photo img){background:transparent!important;mix-blend-mode:normal!important}
 @media(max-width:700px){.product .art.product-photo:has(img){width:116px!important;height:116px!important}}
+
+
+/* PRODUCT PHOTO SIZE STANDARD — match Purple Rain across every real product image */
+.product .art.product-photo:has(img){
+  width:120px!important;
+  height:120px!important;
+  background:transparent!important;
+  background-image:none!important;
+  overflow:visible!important;
+  mix-blend-mode:normal!important;
+  isolation:auto!important;
+}
+.product .art.product-photo:has(img) img{
+  width:100%!important;
+  height:100%!important;
+  object-fit:contain!important;
+  display:block!important;
+  opacity:1!important;
+  filter:none!important;
+  background:transparent!important;
+  mix-blend-mode:normal!important;
+}
+@media(max-width:700px){
+  .product .art.product-photo:has(img){
+    width:116px!important;
+    height:116px!important;
+  }
+}
+/* Very Cherry uses a tighter viewBox so its actual bottle/shadow occupies the same visual area as Purple Rain. */
+.box.two .product .art.product-photo:has(img){
+  width:120px!important;
+  height:120px!important;
+}
+@media(max-width:700px){
+  .box.two .product .art.product-photo:has(img){
+    width:116px!important;
+    height:116px!important;
+  }
+}
