@@ -260,3 +260,58 @@ body{height:auto!important;min-height:100%!important;overflow-x:hidden!important
     font-size:7px!important;
   }
 }
+
+
+/* FINAL GLASS PILL MATERIAL + CURRENT BADGE LAYER FIX */
+.flowline .pill:not(.dark){
+  position:relative!important;
+  z-index:2!important;
+  background:linear-gradient(135deg,rgba(248,248,245,.28) 0%,rgba(218,220,216,.16) 48%,rgba(255,255,252,.30) 100%)!important;
+  border:1px solid rgba(255,255,255,.72)!important;
+  color:#5f5f5f!important;
+  box-shadow:
+    0 7px 20px rgba(35,35,35,.055),
+    inset 0 1px 0 rgba(255,255,255,.82),
+    inset 0 -1px 0 rgba(145,145,140,.10)!important;
+  -webkit-backdrop-filter:blur(18px) saturate(118%) contrast(103%)!important;
+  backdrop-filter:blur(18px) saturate(118%) contrast(103%)!important;
+}
+.flowline .pill.dark{
+  position:relative!important;
+  z-index:2!important;
+  background:linear-gradient(135deg,rgba(70,70,70,.84),rgba(88,88,88,.72))!important;
+  border:1px solid rgba(255,255,255,.20)!important;
+  box-shadow:
+    0 8px 22px rgba(20,20,20,.13),
+    inset 0 1px 0 rgba(255,255,255,.18)!important;
+  -webkit-backdrop-filter:blur(14px) saturate(110%)!important;
+  backdrop-filter:blur(14px) saturate(110%)!important;
+}
+.flowline .pill.is-current{
+  z-index:40!important;
+}
+.flowline .box.is-current{
+  z-index:50!important;
+}
+.flowline .box.is-current:after{
+  z-index:100!important;
+  isolation:auto!important;
+}
+.stage-inline-timer{
+  position:relative!important;
+  z-index:60!important;
+}
+@media(max-width:700px){
+  .flowline .pill:not(.dark){
+    background:linear-gradient(135deg,rgba(248,248,245,.24) 0%,rgba(218,220,216,.13) 50%,rgba(255,255,252,.27) 100%)!important;
+    -webkit-backdrop-filter:blur(16px) saturate(116%) contrast(103%)!important;
+    backdrop-filter:blur(16px) saturate(116%) contrast(103%)!important;
+    box-shadow:
+      0 6px 18px rgba(35,35,35,.05),
+      inset 0 1px 0 rgba(255,255,255,.78),
+      inset 0 -1px 0 rgba(145,145,140,.09)!important;
+  }
+  .flowline .box.is-current{z-index:80!important}
+  .flowline .box.is-current:after{z-index:120!important}
+  .stage-inline-timer{z-index:90!important}
+}
