@@ -372,3 +372,20 @@ body{height:auto!important;min-height:100%!important;overflow-x:hidden!important
 .box.one .product .art.product-photo:has(img) img{mix-blend-mode:multiply!important;background:transparent!important;filter:none!important;opacity:1!important}
 .box.one .product:has(.product-photo img){background:transparent!important}
 .box.one .product:has(.product-photo img).is-ready{background:transparent!important;mix-blend-mode:normal!important;transform:none!important}
+
+
+/* HIGH-RES PURPLE RAIN PNG CUTOUT — no blend, no white card */
+.box.one .product .art.product-photo:has(img),
+.box.one .product .art.product-photo:has(img) img,
+.box.one .product:has(.product-photo img),
+.box.one .product:has(.product-photo img).is-ready,
+.box.one .product:has(.product-photo img).is-ready .art.product-photo,
+.box.one .product:has(.product-photo img).is-ready .art.product-photo img{
+  background:transparent!important;
+  background-image:none!important;
+  mix-blend-mode:normal!important;
+  isolation:auto!important;
+  filter:none!important;
+}
+.box.one .product .art.product-photo:has(img){overflow:visible!important;width:120px!important;height:120px!important}
+.box.one .product .art.product-photo:has(img) img{width:100%!important;height:100%!important;object-fit:contain!important;opacity:1!important;display:block!important}
