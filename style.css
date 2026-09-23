@@ -491,3 +491,56 @@ body{height:auto!important;min-height:100%!important;overflow-x:hidden!important
     font-size:9px!important;
   }
 }
+
+
+/* PRODUCT GRID + EDIT / DELETE CONTROLS */
+.box{
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+}
+.box.one{grid-template-columns:1fr!important}
+.box.two{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+.box.three,.box.four{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+.product{position:relative!important;min-width:0!important}
+.product .name,.product .sub,.product .note{cursor:text!important;-webkit-user-select:text!important;user-select:text!important}
+.product-delete{
+  position:absolute!important;
+  top:2px!important;
+  left:2px!important;
+  width:20px!important;
+  height:20px!important;
+  padding:0!important;
+  border:1px solid rgba(130,130,125,.22)!important;
+  border-radius:50%!important;
+  background:rgba(248,248,245,.48)!important;
+  color:#999!important;
+  font:inherit!important;
+  font-size:13px!important;
+  line-height:18px!important;
+  display:grid!important;
+  place-items:center!important;
+  z-index:8!important;
+  cursor:pointer!important;
+  -webkit-tap-highlight-color:transparent!important;
+}
+.product-delete:active{transform:scale(.92)!important;background:rgba(235,235,230,.72)!important;color:#555!important}
+.add-product-button{
+  grid-column:1/-1!important;
+  justify-self:center!important;
+  width:auto!important;
+  min-width:0!important;
+  min-height:26px!important;
+  height:26px!important;
+  margin:4px auto 0!important;
+  padding:3px 11px!important;
+  border-radius:999px!important;
+  font-size:8px!important;
+  line-height:1!important;
+}
+@media(max-width:700px){
+  .box,.box.three,.box.four{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+  .box.one{grid-template-columns:1fr!important}
+  .box.two{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .product-delete{width:18px!important;height:18px!important;font-size:12px!important;line-height:16px!important;top:0!important;left:0!important}
+  .add-product-button{min-height:24px!important;height:24px!important;padding:3px 10px!important;font-size:7px!important;margin:3px auto 0!important}
+  .product .name,.product .sub,.product .note{-webkit-user-select:text!important;user-select:text!important}
+}
