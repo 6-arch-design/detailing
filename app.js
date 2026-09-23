@@ -59,7 +59,215 @@ function initProductPreparation(){
     update();
   });
 }
-initProductPreparation();if(sessionStart)startTimer(null);function stagesFor(section){return[...section.querySelectorAll('.flowline > .pill, .flowline > .box')]}function clearStage(){sections.forEach(s=>s.querySelectorAll('.is-current,.is-done').forEach(el=>el.classList.remove('is-current','is-done')));document.querySelectorAll('.stage-inline-timer').forEach(el=>el.remove());activeStage=null;stageTimerValue=null;stageStart=null;clearInterval(stageTimerId);stageTimerId=null;if(timerValue)timerValue.textContent='00:00'}function formatTime(ms){const sec=Math.max(0,Math.floor(ms/1000));return String(Math.floor(sec/60)).padStart(2,'0')+':'+String(sec%60).padStart(2,'0')}function updateTotalTimer(){if(!sessionStart||!topTimer)return;topTimer.textContent=formatTime(Date.now()-sessionStart)}function updateStageTimer(){if(!stageStart||!stageTimerValue)return;stageTimerValue.textContent=formatTime(Date.now()-stageStart)}function startTotalTimer(){clearInterval(timerId);updateTotalTimer();timerId=setInterval(updateTotalTimer,250)}function startStageTimer(){clearInterval(stageTimerId);updateStageTimer();stageTimerId=setInterval(updateStageTimer,250)}function selectStage(stage){const all=sections.flatMap(s=>stagesFor(s)),idx=all.indexOf(stage);if(idx<0)return;const wasCurrent=stage.classList.contains('is-current');if(wasCurrent){all.forEach(el=>el.classList.remove('is-current','is-done'));document.querySelectorAll('.stage-inline-timer').forEach(el=>el.remove());activeStage=null;stageTimerValue=null;stageStart=null;clearInterval(stageTimerId);stageTimerId=null;if(timerValue)timerValue.textContent='00:00';return}all.forEach(el=>el.classList.remove('is-current','is-done'));all.slice(0,idx).forEach(el=>el.classList.add('is-done'));document.querySelectorAll('.stage-inline-timer').forEach(el=>el.remove());stage.classList.add('is-current');const timer=document.createElement('span');timer.className='stage-inline-timer';timer.innerHTML='<span class="stage-timer-label">진행</span><span class="stage-timer-dot">●</span><strong>00:00</strong>';stage.insertAdjacentElement('afterend',timer);stageTimerValue=timer.querySelector('strong');stageStart=Date.now();startStageTimer();const sectionIndex=sections.findIndex(s=>s.contains(stage));if(sectionIndex>=0)setCurrentSection(sectionIndex);stage.scrollIntoView({behavior:'smooth',block:'center'})}function bindStageClicks(){sections.forEach(section=>stagesFor(section).forEach(stage=>stage.addEventListener('click',()=>selectStage(stage))))}bindStageClicks();document.getElementById('letsGo')?.addEventListener('click',()=>{sessionStart=window.detailingStartAt||Date.now();stageStart=null;startTotalTimer()},{once:true});if(sessionStart)startTotalTimer();function renderSide(){side.innerHTML=sections.map((s,i)=>`<button aria-label="${s.dataset.title}" data-i="${i}" class="${i===0?'active':''}">${String(i+1).padStart(2,'0')}</button>`).join('');side.querySelectorAll('button').forEach(b=>b.onclick=()=>scrollToSection(+b.dataset.i))}
+initProductPreparation();
+/* EDITABLE PRODUCT INFO + DYNAMIC PRODUCT ADDITIONS */
+const PRODUCT_META_DB='detailing-product-custom-v1';
+function openProductMetaDb(){
+  return new Promise((resolve,reject)=>{
+    const req=indexedDB.open(PRODUCT_META_DB,1);
+    req.onupgradeneeded=()=>{if(!req.result.objectStoreNames.contains('items'))req.result.createObjectStore('items')};
+    req.onsuccess=()=>resolve(req.result);
+    req.onerror=()=>reject(req.error);
+  });
+}
+async function metaPut(key,value){
+  try{
+    const db=await openProductMetaDb();
+    await new Promise((resolve,reject)=>{
+      const tx=db.transaction('items','readwrite');
+      tx.objectStore('items').put(value,key);
+      tx.oncomplete=resolve;
+      tx.onerror=()=>reject(tx.error);
+    });
+    db.close();
+  }catch(e){}
+}
+async function metaGet(key){
+  try{
+    const db=await openProductMetaDb();
+    const value=await new Promise((resolve,reject)=>{
+      const tx=db.transaction('items','readonly');
+      const req=tx.objectStore('items').get(key);
+      req.onsuccess=()=>resolve(req.result||null);
+      req.onerror=()=>reject(req.error);
+    });
+    db.close();
+    return value;
+  }catch(e){return null}
+}
+async function metaAll(){
+  try{
+    const db=await openProductMetaDb();
+    const values=await new Promise((resolve,reject)=>{
+      const tx=db.transaction('items','readonly');
+      const req=tx.objectStore('items').getAll();
+      req.onsuccess=()=>resolve(req.result||[]);
+      req.onerror=()=>reject(req.error);
+    });
+    db.close();
+    return values;
+  }catch(e){return []}
+}
+function makeProductKey(){
+  return 'custom-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,8);
+}
+function getProductInfo(product){
+  return {
+    key:product.dataset.productKey,
+    title:product.querySelector('.name')?.textContent||'새 제품',
+    sub:product.querySelector('.sub')?.textContent||'제품 설명',
+    note:product.querySelector('.note')?.textContent||'사용 방법',
+    boxKey:product.closest('.box')?.dataset.boxKey||''
+  };
+}
+function updateDynamicPrep(section){
+  if(!section)return;
+  const products=[...section.querySelectorAll('.product')];
+  const ready=products.filter(p=>p.classList.contains('is-ready')).length;
+  const sectionStatus=section.querySelector('.section-prep-status');
+  if(sectionStatus){
+    sectionStatus.textContent=products.length&&ready===products.length?'✓ 제품 준비 완료':'제품 준비 '+ready+' / '+products.length;
+    sectionStatus.classList.toggle('complete',products.length>0&&ready===products.length);
+  }
+  section.querySelectorAll('.box').forEach(box=>{
+    const list=[...box.querySelectorAll('.product')];
+    const status=box.querySelector('.product-prep-status');
+    if(!status||!list.length)return;
+    const count=list.filter(p=>p.classList.contains('is-ready')).length;
+    status.textContent=count===list.length?'✓ 준비 완료':'준비 '+count+' / '+list.length;
+    status.classList.toggle('complete',count===list.length);
+  });
+}
+function bindEditableFields(product){
+  if(product.dataset.editFieldsBound==='1')return;
+  product.dataset.editFieldsBound='1';
+  product.querySelectorAll('[data-edit-field]').forEach(field=>{
+    field.addEventListener('click',async e=>{
+      e.stopPropagation();
+      const type=field.dataset.editField;
+      const label=type==='title'?'제품 이름':type==='sub'?'제품 설명':'사용 메모';
+      const value=prompt(label,field.textContent);
+      if(value===null)return;
+      const next=value.trim();
+      if(!next)return;
+      field.textContent=next;
+      await metaPut(product.dataset.productKey,getProductInfo(product));
+    });
+  });
+}
+function bindDynamicProduct(product){
+  if(!product)return;
+  bindEditableFields(product);
+  const art=product.querySelector('[data-upload-art]');
+  const input=product.querySelector('.product-file-input');
+  if(art&&input&&product.dataset.uploadBound!=='1'){
+    product.dataset.uploadBound='1';
+    art.addEventListener('click',e=>{e.stopPropagation();input.click()});
+    input.addEventListener('click',e=>e.stopPropagation());
+    input.addEventListener('change',e=>{
+      e.stopPropagation();
+      const file=e.target.files?.[0];
+      if(!file)return;
+      if(file.type!=='image/png'&&!file.name.toLowerCase().endsWith('.png')){
+        input.value='';
+        alert('PNG 파일만 넣을 수 있어요.');
+        return;
+      }
+      const reader=new FileReader();
+      reader.onload=async()=>{
+        const dataUrl=String(reader.result||'');
+        if(dataUrl){
+          applyProductImage(product,dataUrl);
+          await saveProductImage(product.dataset.productKey,dataUrl);
+        }
+      };
+      reader.readAsDataURL(file);
+      input.value='';
+    });
+  }
+  if(product.dataset.dynamicPrepBound!=='1'){
+    product.dataset.dynamicPrepBound='1';
+    product.addEventListener('click',e=>{
+      if(e.target.closest('[data-upload-art],[data-edit-field],.product-file-input'))return;
+      e.stopPropagation();
+      const ready=product.classList.toggle('is-ready');
+      product.setAttribute('aria-pressed',ready?'true':'false');
+      const toggle=product.querySelector('.product-toggle');
+      if(toggle)toggle.textContent=ready?'ON ✓':'OFF';
+      updateDynamicPrep(product.closest('.section'));
+    });
+  }
+}
+function initProductBoxKeys(){
+  sections.forEach((section,si)=>{
+    section.querySelectorAll('.box').forEach((box,bi)=>{
+      box.dataset.boxKey=String(si+1)+'-'+String(bi+1);
+    });
+  });
+}
+async function restoreCustomProducts(){
+  const saved=await metaAll();
+  for(const item of saved){
+    if(!item||!item.key)continue;
+    let product=document.querySelector('.product[data-product-key="'+CSS.escape(item.key)+'"]');
+    if(product){
+      if(item.title)product.querySelector('.name').textContent=item.title;
+      if(item.sub)product.querySelector('.sub').textContent=item.sub;
+      if(item.note)product.querySelector('.note').textContent=item.note;
+      bindEditableFields(product);
+      continue;
+    }
+    if(!item.boxKey)continue;
+    const box=document.querySelector('.box[data-box-key="'+CSS.escape(item.boxKey)+'"]');
+    if(!box)continue;
+    const temp=document.createElement('div');
+    temp.innerHTML=Product({key:item.key,title:item.title||'새 제품',sub:item.sub||'제품 설명',note:item.note||'사용 방법'});
+    product=temp.firstElementChild;
+    box.insertBefore(product,box.querySelector('.product-prep-status')||null);
+    bindDynamicProduct(product);
+    const image=await loadProductImage(item.key);
+    if(image)applyProductImage(product,image);
+  }
+  sections.forEach(updateDynamicPrep);
+}
+function initExistingProductEditing(){
+  document.querySelectorAll('.product').forEach(product=>{
+    bindEditableFields(product);
+    const box=product.closest('.box');
+    if(box&&!box.dataset.addButtonReady)box.dataset.addButtonReady='1';
+  });
+}
+function addProductToBox(box){
+  const data={key:makeProductKey(),title:'새 제품',sub:'제품 설명',note:'사용 방법',boxKey:box.dataset.boxKey};
+  const temp=document.createElement('div');
+  temp.innerHTML=Product(data);
+  const product=temp.firstElementChild;
+  box.insertBefore(product,box.querySelector('.product-prep-status')||null);
+  bindDynamicProduct(product);
+  metaPut(data.key,data);
+  updateDynamicPrep(box.closest('.section'));
+  setTimeout(()=>product.querySelector('.name')?.click(),100);
+}
+function initProductAddButtons(){
+  document.querySelectorAll('.box').forEach(box=>{
+    if(box.querySelector('.add-product-button'))return;
+    const button=document.createElement('button');
+    button.type='button';
+    button.className='add-product-button';
+    button.textContent='＋ 제품 추가';
+    button.addEventListener('click',e=>{
+      e.preventDefault();
+      e.stopPropagation();
+      addProductToBox(box);
+    });
+    box.appendChild(button);
+  });
+}
+initProductBoxKeys();
+initExistingProductEditing();
+initProductAddButtons();
+restoreCustomProducts();
+if(sessionStart)startTimer(null);function stagesFor(section){return[...section.querySelectorAll('.flowline > .pill, .flowline > .box')]}function clearStage(){sections.forEach(s=>s.querySelectorAll('.is-current,.is-done').forEach(el=>el.classList.remove('is-current','is-done')));document.querySelectorAll('.stage-inline-timer').forEach(el=>el.remove());activeStage=null;stageTimerValue=null;stageStart=null;clearInterval(stageTimerId);stageTimerId=null;if(timerValue)timerValue.textContent='00:00'}function formatTime(ms){const sec=Math.max(0,Math.floor(ms/1000));return String(Math.floor(sec/60)).padStart(2,'0')+':'+String(sec%60).padStart(2,'0')}function updateTotalTimer(){if(!sessionStart||!topTimer)return;topTimer.textContent=formatTime(Date.now()-sessionStart)}function updateStageTimer(){if(!stageStart||!stageTimerValue)return;stageTimerValue.textContent=formatTime(Date.now()-stageStart)}function startTotalTimer(){clearInterval(timerId);updateTotalTimer();timerId=setInterval(updateTotalTimer,250)}function startStageTimer(){clearInterval(stageTimerId);updateStageTimer();stageTimerId=setInterval(updateStageTimer,250)}function selectStage(stage){const all=sections.flatMap(s=>stagesFor(s)),idx=all.indexOf(stage);if(idx<0)return;const wasCurrent=stage.classList.contains('is-current');if(wasCurrent){all.forEach(el=>el.classList.remove('is-current','is-done'));document.querySelectorAll('.stage-inline-timer').forEach(el=>el.remove());activeStage=null;stageTimerValue=null;stageStart=null;clearInterval(stageTimerId);stageTimerId=null;if(timerValue)timerValue.textContent='00:00';return}all.forEach(el=>el.classList.remove('is-current','is-done'));all.slice(0,idx).forEach(el=>el.classList.add('is-done'));document.querySelectorAll('.stage-inline-timer').forEach(el=>el.remove());stage.classList.add('is-current');const timer=document.createElement('span');timer.className='stage-inline-timer';timer.innerHTML='<span class="stage-timer-label">진행</span><span class="stage-timer-dot">●</span><strong>00:00</strong>';stage.insertAdjacentElement('afterend',timer);stageTimerValue=timer.querySelector('strong');stageStart=Date.now();startStageTimer();const sectionIndex=sections.findIndex(s=>s.contains(stage));if(sectionIndex>=0)setCurrentSection(sectionIndex);stage.scrollIntoView({behavior:'smooth',block:'center'})}function bindStageClicks(){sections.forEach(section=>stagesFor(section).forEach(stage=>stage.addEventListener('click',()=>selectStage(stage))))}bindStageClicks();document.getElementById('letsGo')?.addEventListener('click',()=>{sessionStart=window.detailingStartAt||Date.now();stageStart=null;startTotalTimer()},{once:true});if(sessionStart)startTotalTimer();function renderSide(){side.innerHTML=sections.map((s,i)=>`<button aria-label="${s.dataset.title}" data-i="${i}" class="${i===0?'active':''}">${String(i+1).padStart(2,'0')}</button>`).join('');side.querySelectorAll('button').forEach(b=>b.onclick=()=>scrollToSection(+b.dataset.i))}
 function scrollToSection(i){if(i<0||i>=sections.length)return;const top=sections[i].getBoundingClientRect().top+window.scrollY-60;window.scrollTo({top:Math.max(0,top),behavior:'smooth'})}
 function setCurrentSection(i){if(i<0||i>=sections.length)return;current=i;num.textContent=String(i+1).padStart(2,'0');navTitle.textContent=sections[i].dataset.title;navCount.textContent=`${String(i+1).padStart(2,'0')} / ${String(sections.length).padStart(2,'0')}`;side.querySelectorAll('button').forEach((b,n)=>b.classList.toggle('active',n===i))}
 function updateSectionFromScroll(){const probe=window.innerHeight*.42;let best=0,bestScore=-Infinity;sections.forEach((s,i)=>{const r=s.getBoundingClientRect();const top=Math.max(r.top,0),bottom=Math.min(r.bottom,window.innerHeight);const visible=Math.max(0,bottom-top);const center=(r.top+r.bottom)/2;const score=visible-Math.abs(center-probe)*.12;if(score>bestScore){bestScore=score;best=i}});if(best!==current){current=best;setCurrentSection(best)}else setCurrentSection(current)}
