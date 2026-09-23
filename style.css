@@ -442,3 +442,16 @@ body{height:auto!important;min-height:100%!important;overflow-x:hidden!important
 .box.two .product .art.product-photo:has(img){width:116px!important;height:116px!important;overflow:visible!important;background:transparent!important;background-image:none!important;mix-blend-mode:normal!important}
 .box.two .product .art.product-photo:has(img) img{width:100%!important;height:100%!important;object-fit:contain!important;display:block!important;opacity:1!important;filter:none!important;mix-blend-mode:normal!important}
 @media(max-width:700px){.box.two .product .art.product-photo:has(img){width:116px!important;height:116px!important}}
+
+/* MOBILE PNG PRODUCT UPLOAD SLOTS */
+.product .product-upload-art{width:58px!important;height:58px!important;margin-bottom:6px!important;display:grid!important;place-items:center!important;position:relative!important;background:#bdbdbd!important;border-radius:3px!important;overflow:hidden!important;cursor:pointer!important;flex:0 0 auto!important}
+.product .product-upload-art .product-file-input{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;opacity:0!important;cursor:pointer!important;z-index:3!important}
+.product .product-upload-art .upload-placeholder{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:2px!important;color:rgba(255,255,255,.88)!important;pointer-events:none!important;line-height:1!important}
+.product .product-upload-art .upload-placeholder b{font-size:9px!important;font-weight:900!important;letter-spacing:.04em!important}
+.product .product-upload-art .upload-placeholder small{font-size:7px!important;color:rgba(255,255,255,.72)!important}
+.product .product-upload-art.has-image{background:transparent!important}
+.product .product-upload-art.has-image img{width:100%!important;height:100%!important;object-fit:contain!important;display:block!important;pointer-events:none!important;filter:none!important;opacity:1!important;mix-blend-mode:normal!important}
+.product:not(.is-ready) .product-upload-art.has-image img{opacity:.48!important;filter:grayscale(.35)!important}
+.product.is-ready .product-upload-art.has-image img{opacity:1!important;filter:none!important}
+@media(max-width:700px){.product .product-upload-art{width:48px!important;height:48px!important;border-radius:3px!important}.product .product-upload-art .upload-placeholder b{font-size:8px!important}.product .product-upload-art .upload-placeholder small{font-size:6px!important}}
+.product .art.product-photo{background:#bdbdbd!important;background-image:none!important}
