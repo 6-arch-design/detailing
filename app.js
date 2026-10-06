@@ -5,7 +5,7 @@ async function saveProductImage(key,blob){try{const db=await openProductDb();awa
 async function loadLegacyProductImage(key){try{const req=indexedDB.open('detailing-product-images-v2',1);const db=await new Promise((resolve,reject)=>{req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error)});if(!db.objectStoreNames.contains('images')){db.close();return null}const value=await new Promise((resolve,reject)=>{const tx=db.transaction('images','readonly');const r=tx.objectStore('images').get(key);r.onsuccess=()=>resolve(r.result||null);r.onerror=()=>reject(r.error)});db.close();return value}catch(e){return null}}
 async function loadProductImage(key){try{const db=await openProductDb();const value=await new Promise((resolve,reject)=>{const tx=db.transaction('images','readonly');const req=tx.objectStore('images').get(key);req.onsuccess=()=>resolve(req.result||null);req.onerror=()=>reject(req.error)});db.close();if(value)return value;const legacy=await loadLegacyProductImage(key);if(legacy){let blob=legacy;if(typeof legacy==='string'){try{blob=await fetch(legacy).then(r=>r.blob())}catch(e){blob=null}}if(blob){await saveProductImage(key,blob);return blob}}return null}catch(e){return null}}
 function applyProductImage(product,data){const art=product.querySelector('[data-upload-art]');if(!art)return;art.classList.add('has-image');const ph=art.querySelector('.upload-placeholder');if(ph)ph.remove();let img=art.querySelector('img');if(!img){img=document.createElement('img');img.alt=product.querySelector('.name')?.textContent||'제품 사진';art.appendChild(img)}if(img.dataset.objectUrl){try{URL.revokeObjectURL(img.dataset.objectUrl)}catch(e){}}if(data instanceof Blob){const url=URL.createObjectURL(data);img.dataset.objectUrl=url;img.src=url}else{img.src=String(data||'')}}
-async function bindProductUpload(product){const key=product.dataset.productKey,art=product.querySelector('[data-upload-art]'),input=product.querySelector('.product-file-input');if(!key||!art||!input)return;if(product.dataset.uploadBound==='1')return;product.dataset.uploadBound='1';art.addEventListener('click',e=>{e.stopPropagation();input.click()});input.addEventListener('click',e=>e.stopPropagation());input.addEventListener('change',e=>{e.stopPropagation();const file=e.target.files?.[0];if(!file)return;if(file.type!=='image/png'&&!file.name.toLowerCase().endsWith('.png')){input.value='';alert('PNG 파일만 넣을 수 있어요.');return}applyProductImage(product,file);saveProductImage(key,file);input.value=''});const saved=await loadProductImage(key);if(saved)applyProductImage(product,saved)}
+async function bindProductUpload(product){const key=product.dataset.productKey,art=product.querySelector('[data-upload-art]'),input=product.querySelector('.product-file-input');if(!key||!art||!input)return;if(product.dataset.uploadBound==='1')return;product.dataset.uploadBound='1';art.addEventListener('click',e=>{e.stopPropagation();input.click()});input.addEventListener('click',e=>e.stopPropagation());input.addEventListener('change',e=>{e.stopPropagation();const file=e.target.files?.[0];if(!file)return;if(file.type!=='image/png'&&!file.name.toLowerCase().endsWith('.png')){input.value='';alert('PNG 파일만 넣을 수 있어요.');return}applyProductImage(product,file);product.__pendingImageBlob=file;saveProductImage(key,file);input.value=''});const saved=await loadProductImage(key);if(saved)applyProductImage(product,saved)}
 async function initProductUploads(){for(const product of document.querySelectorAll('.product'))await bindProductUpload(product)}
 initProductUploads();
 
@@ -64,6 +64,63 @@ function initProductPreparation(){
 }
 initProductPreparation();
 /* EDITABLE PRODUCT INFO + DYNAMIC PRODUCT ADDITIONS */
+const PRODUCT_STATE_DB='detailing-product-state-v4';
+function openProductStateDb(){return new Promise((resolve,reject)=>{const req=indexedDB.open(PRODUCT_STATE_DB,1);req.onupgradeneeded=()=>{if(!req.result.objectStoreNames.contains('boxes'))req.result.createObjectStore('boxes');};req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error)})}
+async function statePut(boxKey,value){const db=await openProductStateDb();await new Promise((resolve,reject)=>{const tx=db.transaction('boxes','readwrite');tx.objectStore('boxes').put(value,boxKey);tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error)});db.close()}
+async function stateAll(){try{const db=await openProductStateDb();const values=await new Promise((resolve,reject)=>{const tx=db.transaction('boxes','readonly');const req=tx.objectStore('boxes').getAll();req.onsuccess=()=>resolve(req.result||[]);req.onerror=()=>reject(req.error)});db.close();return values}catch(e){return []}}
+async function getProductImageForSave(product){if(product.__pendingImageBlob instanceof Blob)return product.__pendingImageBlob;return await loadProductImage(product.dataset.productKey)}
+async function applyBoxSnapshot(snapshot){
+  if(!snapshot||!snapshot.boxKey)return;
+  const box=document.querySelector('.box[data-box-key="'+CSS.escape(snapshot.boxKey)+'"]');if(!box)return;
+  const items=Array.isArray(snapshot.products)?snapshot.products:[];
+  for(const item of items){
+    if(!item||!item.key)continue;
+    let product=document.querySelector('.product[data-product-key="'+CSS.escape(item.key)+'"]');
+    if(item.deleted){if(product)product.remove();continue}
+    if(!product){
+      const temp=document.createElement('div');temp.innerHTML=Product({key:item.key,title:item.title||'새 제품',sub:item.sub||'제품 설명',note:item.note||'사용 방법'});
+      product=temp.firstElementChild;
+      const anchor=box.querySelector('.product-prep-status')||box.querySelector('.box-save-button')||box.querySelector('.add-product-button');
+      box.insertBefore(product,anchor||null);
+    }
+    if(item.title)product.querySelector('.name').textContent=item.title;
+    if(item.sub)product.querySelector('.sub').textContent=item.sub;
+    if(item.note)product.querySelector('.note').textContent=item.note;
+    bindDynamicProduct(product);
+    if(item.imageBlob instanceof Blob){product.__pendingImageBlob=item.imageBlob;applyProductImage(product,item.imageBlob)}
+    else{const image=await loadProductImage(item.key);if(image)applyProductImage(product,image)}
+  }
+  const anchor=box.querySelector('.product-prep-status')||box.querySelector('.box-save-button')||box.querySelector('.add-product-button');
+  const ordered=[...box.querySelectorAll('.product')].sort((a,b)=>{const ai=items.findIndex(x=>x&&x.key===a.dataset.productKey);const bi=items.findIndex(x=>x&&x.key===b.dataset.productKey);return(ai<0?9999:ai)-(bi<0?9999:bi)});
+  ordered.forEach(p=>box.insertBefore(p,anchor||null));
+}
+async function saveBoxState(box){
+  if(!box)return;
+  const boxKey=box.dataset.boxKey;if(!boxKey)return;
+  const allMeta=await metaAll();
+  const deleted=allMeta.filter(item=>item&&item.deleted&&String(item.boxKey||'')===String(boxKey));
+  const products=[...box.querySelectorAll('.product')];
+  const items=[];
+  for(let i=0;i<products.length;i++){
+    const product=products[i],info=getProductInfo(product);info.order=i;info.deleted=false;
+    const imageBlob=await getProductImageForSave(product);
+    items.push({...info,imageBlob:imageBlob||null});
+  }
+  const keys=new Set(items.map(item=>item.key));
+  for(const item of deleted){if(!keys.has(item.key))items.push({...item,deleted:true,imageBlob:null})}
+  await statePut(boxKey,{boxKey,savedAt:Date.now(),products:items});
+  for(const item of items){const meta={...item};delete meta.imageBlob;await metaPut(item.key,meta)}
+  const btn=box.querySelector('.box-save-button');
+  if(btn){btn.classList.add('saved');btn.textContent='SAVED ✓';clearTimeout(btn.__saveTimer);btn.__saveTimer=setTimeout(()=>{btn.classList.remove('saved');btn.textContent='SAVE'},1600)}
+}
+function initBoxSaveButtons(){
+  document.querySelectorAll('.box').forEach(box=>{
+    if(box.querySelector('.box-save-button'))return;
+    const button=document.createElement('button');button.type='button';button.className='box-save-button';button.textContent='SAVE';
+    button.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();saveBoxState(box)});
+    box.appendChild(button);
+  });
+}
 const PRODUCT_META_DB='detailing-product-custom-v2';
 function openProductMetaDb(){return new Promise((resolve,reject)=>{const req=indexedDB.open(PRODUCT_META_DB,1);req.onupgradeneeded=()=>{if(!req.result.objectStoreNames.contains('items'))req.result.createObjectStore('items')};req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error)})}
 async function metaPut(key,value){try{const db=await openProductMetaDb();await new Promise((resolve,reject)=>{const tx=db.transaction('items','readwrite');tx.objectStore('items').put(value,key);tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error)});db.close()}catch(e){console.warn('meta save failed',e)}}
@@ -76,25 +133,30 @@ function bindEditableFields(product){if(product.dataset.editFieldsBound==='1')re
 async function deleteProduct(product){if(!product)return;const key=product.dataset.productKey;if(!key)return;const name=product.querySelector('.name')?.textContent||'제품';if(!confirm(`"${name}" 제품을 삭제할까요?`))return;const info=getProductInfo(product);info.deleted=true;await metaPut(key,info);product.remove();updateDynamicPrep(product.closest('.section'))}
 function bindDynamicProduct(product){if(!product)return;bindEditableFields(product);bindProductUpload(product);const del=product.querySelector('.product-delete');if(del&&product.dataset.deleteBound!=='1'){product.dataset.deleteBound='1';del.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();deleteProduct(product)})}if(product.dataset.dynamicPrepBound!=='1'&&product.dataset.prepBound!=='1'){product.dataset.dynamicPrepBound='1';product.addEventListener('click',e=>{if(e.target.closest('[data-upload-art],[data-edit-field],.product-file-input,.product-delete'))return;e.stopPropagation();const ready=product.classList.toggle('is-ready');product.setAttribute('aria-pressed',ready?'true':'false');const toggle=product.querySelector('.product-toggle');if(toggle)toggle.textContent=ready?'ON ✓':'OFF';updateDynamicPrep(product.closest('.section'))})}}
 function initProductBoxKeys(){sections.forEach((section,si)=>section.querySelectorAll('.box').forEach((box,bi)=>{box.dataset.boxKey=String(si+1)+'-'+String(bi+1)}))}
-async function restoreCustomProducts(){const saved=(await metaAll()).filter(Boolean).sort((a,b)=>String(a.boxKey||'').localeCompare(String(b.boxKey||''))||(Number(a.order??999)-Number(b.order??999)));for(const item of saved){if(!item||!item.key)continue;const product=document.querySelector('.product[data-product-key="'+CSS.escape(item.key)+'"]');if(item.deleted){if(product)product.remove();continue}if(product){if(item.title)product.querySelector('.name').textContent=item.title;if(item.sub)product.querySelector('.sub').textContent=item.sub;if(item.note)product.querySelector('.note').textContent=item.note;bindDynamicProduct(product);continue}if(!item.boxKey)continue;const box=document.querySelector('.box[data-box-key="'+CSS.escape(item.boxKey)+'"]');if(!box)continue;const temp=document.createElement('div');temp.innerHTML=Product({key:item.key,title:item.title||'새 제품',sub:item.sub||'제품 설명',note:item.note||'사용 방법'});const newProduct=temp.firstElementChild;box.insertBefore(newProduct,box.querySelector('.product-prep-status')||box.querySelector('.add-product-button')||null);bindDynamicProduct(newProduct);const image=await loadProductImage(item.key);if(image)applyProductImage(newProduct,image)}sections.forEach(updateDynamicPrep)}
+async function restoreCustomProducts(){
+  const snapshots=await stateAll();
+  const snapshotBoxes=new Set(snapshots.map(s=>String(s.boxKey||'')));
+  for(const snapshot of snapshots)await applyBoxSnapshot(snapshot);
+  const saved=(await metaAll()).filter(Boolean).filter(item=>!snapshotBoxes.has(String(item.boxKey||''))).sort((a,b)=>String(a.boxKey||'').localeCompare(String(b.boxKey||''))||(Number(a.order??999)-Number(b.order??999)));
+  for(const item of saved){
+    if(!item||!item.key)continue;
+    const product=document.querySelector('.product[data-product-key="'+CSS.escape(item.key)+'"]');
+    if(item.deleted){if(product)product.remove();continue}
+    if(product){if(item.title)product.querySelector('.name').textContent=item.title;if(item.sub)product.querySelector('.sub').textContent=item.sub;if(item.note)product.querySelector('.note').textContent=item.note;bindDynamicProduct(product);continue}
+    if(!item.boxKey)continue;
+    const box=document.querySelector('.box[data-box-key="'+CSS.escape(item.boxKey)+'"]');if(!box)continue;
+    const temp=document.createElement('div');temp.innerHTML=Product({key:item.key,title:item.title||'새 제품',sub:item.sub||'제품 설명',note:item.note||'사용 방법'});
+    const newProduct=temp.firstElementChild;const anchor=box.querySelector('.product-prep-status')||box.querySelector('.box-save-button')||box.querySelector('.add-product-button');box.insertBefore(newProduct,anchor||null);bindDynamicProduct(newProduct);
+    const image=await loadProductImage(item.key);if(image)applyProductImage(newProduct,image)
+  }
+  sections.forEach(updateDynamicPrep)
+}
 function initExistingProductEditing(){document.querySelectorAll('.product').forEach(product=>bindDynamicProduct(product))}
 function addProductToBox(box){const data={key:makeProductKey(),title:'새 제품',sub:'제품 설명',note:'사용 방법',boxKey:box.dataset.boxKey,deleted:false};const temp=document.createElement('div');temp.innerHTML=Product(data);const product=temp.firstElementChild;box.insertBefore(product,box.querySelector('.product-prep-status')||box.querySelector('.add-product-button')||null);bindDynamicProduct(product);metaPut(data.key,data);updateDynamicPrep(box.closest('.section'));setTimeout(()=>product.querySelector('.name')?.click(),100)}
 function initProductAddButtons(){document.querySelectorAll('.box').forEach(box=>{if(box.querySelector('.add-product-button'))return;const button=document.createElement('button');button.type='button';button.className='add-product-button';button.textContent='＋ 제품 추가';button.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();addProductToBox(box)});box.appendChild(button)})}
-async function saveAllProductChanges(){
-  const products=[...document.querySelectorAll('.product')];
-  const saved=await metaAll();
-  const liveKeys=new Set(products.map(product=>product.dataset.productKey));
-  const tasks=products.map(product=>metaPut(product.dataset.productKey,getProductInfo(product)));
-  const deletedTasks=saved.filter(item=>item&&item.key&&item.deleted&&!liveKeys.has(item.key)).map(item=>metaPut(item.key,item));
-  await Promise.all([...tasks,...deletedTasks]);
-  try{localStorage.setItem('detailing-products-snapshot-v2',JSON.stringify({savedAt:Date.now(),keys:[...liveKeys]}))}catch(e){}
-  try{localStorage.setItem('detailing-products-saved-at',String(Date.now()))}catch(e){}
-  const btn=document.getElementById('saveProducts');
-  const status=document.getElementById('saveProductsStatus');
-  if(btn){btn.classList.add('saved');btn.textContent='저장됨 ✓';setTimeout(()=>{btn.classList.remove('saved');btn.textContent='저장'},1600)}
-  if(status){status.textContent='제품 설정 저장 완료';status.classList.add('show');clearTimeout(window.__saveStatusTimer);window.__saveStatusTimer=setTimeout(()=>status.classList.remove('show'),1800)}
-}
+async function saveAllProductChanges(){for(const box of document.querySelectorAll('.box'))await saveBoxState(box)}
 initProductBoxKeys();
+initBoxSaveButtons();
 initExistingProductEditing();
 initProductAddButtons();
 restoreCustomProducts();
@@ -104,7 +166,7 @@ document.getElementById('resetTotalTimer')?.addEventListener('click',()=>{
   window.detailingStartAt=sessionStart;
   startTotalTimer();
 });
-document.getElementById('saveProducts')?.addEventListener('click',()=>saveAllProductChanges());if(sessionStart)startTotalTimer();function renderSide(){side.innerHTML=sections.map((s,i)=>`<button aria-label="${s.dataset.title}" data-i="${i}" class="${i===0?'active':''}">${String(i+1).padStart(2,'0')}</button>`).join('');side.querySelectorAll('button').forEach(b=>b.onclick=()=>scrollToSection(+b.dataset.i))}
+if(sessionStart)startTotalTimer();function renderSide(){side.innerHTML=sections.map((s,i)=>`<button aria-label="${s.dataset.title}" data-i="${i}" class="${i===0?'active':''}">${String(i+1).padStart(2,'0')}</button>`).join('');side.querySelectorAll('button').forEach(b=>b.onclick=()=>scrollToSection(+b.dataset.i))}
 function scrollToSection(i){if(i<0||i>=sections.length)return;const top=sections[i].getBoundingClientRect().top+window.scrollY-60;window.scrollTo({top:Math.max(0,top),behavior:'smooth'})}
 function setCurrentSection(i){if(i<0||i>=sections.length)return;current=i;num.textContent=String(i+1).padStart(2,'0');navTitle.textContent=sections[i].dataset.title;navCount.textContent=`${String(i+1).padStart(2,'0')} / ${String(sections.length).padStart(2,'0')}`;side.querySelectorAll('button').forEach((b,n)=>b.classList.toggle('active',n===i))}
 function updateSectionFromScroll(){const probe=window.innerHeight*.42;let best=0,bestScore=-Infinity;sections.forEach((s,i)=>{const r=s.getBoundingClientRect();const top=Math.max(r.top,0),bottom=Math.min(r.bottom,window.innerHeight);const visible=Math.max(0,bottom-top);const center=(r.top+r.bottom)/2;const score=visible-Math.abs(center-probe)*.12;if(score>bestScore){bestScore=score;best=i}});if(best!==current){current=best;setCurrentSection(best)}else setCurrentSection(current)}
