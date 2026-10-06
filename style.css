@@ -642,3 +642,55 @@ appearance:none!important;border:1px solid rgba(145,145,140,.34)!important;backg
 .box-save-button{grid-column:1/-1!important;justify-self:center!important;width:auto!important;min-width:0!important;height:25px!important;margin:4px auto 0!important;padding:0 10px!important;border:1px solid #d4d4d1!important;border-radius:999px!important;background:rgba(255,255,255,.72)!important;color:#777!important;font:inherit!important;font-size:8px!important;font-weight:800!important;letter-spacing:.04em!important;line-height:1!important;cursor:pointer!important;touch-action:manipulation!important;white-space:nowrap!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.78),0 3px 10px rgba(30,30,30,.035)!important}
 .box-save-button:active,.box-save-button.saved{transform:scale(.96)!important;background:#222!important;border-color:#222!important;color:#fff!important}
 @media(max-width:700px){.box-save-button{height:23px!important;padding:0 8px!important;font-size:7px!important;margin:3px auto 0!important}}
+
+
+/* FINAL PER-BOX SAVE CONTROL — compact bottom-right toggle style */
+.box{
+  padding-bottom:48px!important;
+}
+.box-save-button{
+  position:absolute!important;
+  right:9px!important;
+  bottom:8px!important;
+  z-index:30!important;
+  grid-column:auto!important;
+  justify-self:auto!important;
+  width:auto!important;
+  min-width:0!important;
+  height:22px!important;
+  margin:0!important;
+  padding:0 8px!important;
+  border:1px solid rgba(130,130,125,.28)!important;
+  border-radius:999px!important;
+  background:rgba(248,248,245,.54)!important;
+  color:#8a8a86!important;
+  font:inherit!important;
+  font-size:7px!important;
+  font-weight:800!important;
+  letter-spacing:.05em!important;
+  line-height:1!important;
+  cursor:pointer!important;
+  touch-action:manipulation!important;
+  white-space:nowrap!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.72),0 3px 9px rgba(30,30,30,.035)!important;
+  -webkit-tap-highlight-color:transparent!important;
+}
+.box-save-button:active,
+.box-save-button.saved{
+  transform:scale(.95)!important;
+  background:#222!important;
+  border-color:#222!important;
+  color:#fff!important;
+}
+@media(max-width:700px){
+  .box{
+    padding-bottom:44px!important;
+  }
+  .box-save-button{
+    right:7px!important;
+    bottom:7px!important;
+    height:21px!important;
+    padding:0 7px!important;
+    font-size:6.5px!important;
+  }
+}
