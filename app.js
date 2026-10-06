@@ -80,6 +80,16 @@ async function restoreCustomProducts(){const saved=await metaAll();for(const ite
 function initExistingProductEditing(){document.querySelectorAll('.product').forEach(product=>bindDynamicProduct(product))}
 function addProductToBox(box){const data={key:makeProductKey(),title:'새 제품',sub:'제품 설명',note:'사용 방법',boxKey:box.dataset.boxKey,deleted:false};const temp=document.createElement('div');temp.innerHTML=Product(data);const product=temp.firstElementChild;box.insertBefore(product,box.querySelector('.product-prep-status')||box.querySelector('.add-product-button')||null);bindDynamicProduct(product);metaPut(data.key,data);updateDynamicPrep(box.closest('.section'));setTimeout(()=>product.querySelector('.name')?.click(),100)}
 function initProductAddButtons(){document.querySelectorAll('.box').forEach(box=>{if(box.querySelector('.add-product-button'))return;const button=document.createElement('button');button.type='button';button.className='add-product-button';button.textContent='＋ 제품 추가';button.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();addProductToBox(box)});box.appendChild(button)})}
+async function saveAllProductChanges(){
+  const products=[...document.querySelectorAll('.product')];
+  const tasks=products.map(product=>metaPut(product.dataset.productKey,getProductInfo(product)));
+  await Promise.all(tasks);
+  try{localStorage.setItem('detailing-products-saved-at',String(Date.now()))}catch(e){}
+  const btn=document.getElementById('saveProducts');
+  const status=document.getElementById('saveProductsStatus');
+  if(btn){btn.classList.add('saved');btn.textContent='저장됨 ✓';setTimeout(()=>{btn.classList.remove('saved');btn.textContent='저장'},1600)}
+  if(status){status.textContent='제품 설정 저장 완료';status.classList.add('show');clearTimeout(window.__saveStatusTimer);window.__saveStatusTimer=setTimeout(()=>status.classList.remove('show'),1800)}
+}
 initProductBoxKeys();
 initExistingProductEditing();
 initProductAddButtons();
